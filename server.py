@@ -1,16 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 # Common imports
-import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 
 # Data processing and visualization imports
 import string
 import pandas as pd
-import plotly.express as px
 import tensorflow.data as tfd
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 
