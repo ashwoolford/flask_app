@@ -27,7 +27,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 # load pre trained model
 model = tf.keras.models.load_model('./trained_model/my_model.tf')
-model.summary()
+#model.summary()
 
 
 # Specify the path to the SPAM text message dataset
