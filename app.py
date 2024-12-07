@@ -112,6 +112,10 @@ def predict():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
+@app.route('/', methods=['GET'])
+def health():
+    return jsonify({'msg': 'operational'}), 200
+
 
 # Run the app
 if __name__ == '__main__':
