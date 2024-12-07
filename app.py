@@ -15,6 +15,8 @@ from sklearn.model_selection import train_test_split
 from transformer_layer import TransformerLayer
 from token_and_positional_embedding import TokenAndPositionalEmbedding
 
+from utils import bangla_words_percentage
+
 # variables 
 vocab_size = 10000
 max_seq_len = 40
@@ -53,19 +55,6 @@ data_frame = pd.read_csv(data_path)
 X = data_frame['Email'].tolist()
 y = data_frame['Status'].tolist()
 
-def decode_tokens(tokens):
-    """
-    This function takes in a list of tokenized integers and returns the corresponding text based on the provided vocabulary.
-    
-    Args:
-    - tokens: A list of integers representing tokenized text.
-    - vocab: A list of words in the vocabulary corresponding to each integer index.
-    
-    Returns:
-    - text: A string of decoded text.
-    """
-    text = " ".join(VOCAB[int(token)] for token in tokens).strip()
-    return text
 
 # Define a function to preprocess the text
 def preprocess_text(text: str) -> str:
@@ -110,17 +99,15 @@ def predict():
         # Assuming the input is a string and we need to preprocess it for the model
         input_string = data['input_string']
 
-        tokens = text_vectorizer([input_string])
-        print('tokens ', tokens)
-        print('decode_tokens ', decode_tokens(tokens[0]))
+        if bangla_words_percentage(input_string) >= 90:
+            tokens = text_vectorizer([input_string])
+            
+            proba = 1 if model.predict(tokens, verbose=0)[0][0]>0.5 else 0
+            pred = label_encoder.inverse_transform([proba])
 
-        proba = 1 if model.predict(tokens, verbose=0)[0][0]>0.5 else 0
-        print('proba ', proba)
-        pred = label_encoder.inverse_transform([proba])
-        print(f"Message: '{input_string}' | Prediction: {pred[0].title()}")
-        
-
-        return jsonify({'prediction': pred[0].title()})
+            return jsonify({'prediction': pred[0].title()}), 200
+        else:
+            return jsonify({'error': 'Input has not enough bangla words'}), 422
 
     except Exception as e:
         return jsonify({'error': str(e)}), 400
