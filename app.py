@@ -114,6 +114,7 @@ def predict():
 
 @app.route('/', methods=['GET'])
 def health():
+    print('Get request...')
     return jsonify({'msg': 'operational'}), 200
 
 
